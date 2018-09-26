@@ -12,6 +12,9 @@
     <?php foreach ($articles as $article): ?>
     <tr>
         <td>
+            <!-- $this is an example of the built in htmlhelper cakephp comes With
+        It assists with tasks such as creating links, forms, and paginate buttons.
+        The link(link text is the first param / url is the second param)-->
             <?= $this->Html->link($article->title, ['action' => 'view', $article->slug]) ?>
         </td>
         <td>
