@@ -1,5 +1,4 @@
 <?php
-die('yo');
 return [
     /**
      * Debug Level:
