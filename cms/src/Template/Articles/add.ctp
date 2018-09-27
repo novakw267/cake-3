@@ -16,3 +16,4 @@
     echo $this->Form->button(__('Save Article'));
     echo $this->Form->end();
 ?>
+<?= $this->Html->link('Return', ['action' => 'index']) ?>
