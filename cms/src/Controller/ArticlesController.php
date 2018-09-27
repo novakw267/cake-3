@@ -49,6 +49,13 @@ class ArticlesController extends AppController
             // same thing here except this is for if you are not successfull
             $this->Flash->error(__('Unable to add your article.'));
         }
+        // Get a list of tags.
+            $tags = $this->Articles->Tags->find('list');
+
+            // Set tags to the view context
+            $this->set('tags', $tags);
+
+            $this->set('article', $article);
         $this->set('article', $article);
     }
         public function edit($slug)
@@ -65,6 +72,12 @@ class ArticlesController extends AppController
             }
             $this->Flash->error(__('Unable to update your article.'));
         }
+
+        // Get a list of tags.
+        $tags = $this->Articles->Tags->find('list');
+
+        // Set tags to the view context
+        $this->set('tags', $tags);
 
         $this->set('article', $article);
 }

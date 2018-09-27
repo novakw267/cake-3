@@ -13,6 +13,7 @@ class ArticlesTable extends Table
     {
         // Adding in the time stamp behavior
         $this->addBehavior('Timestamp');
+          $this->belongsToMany('Tags'); // Add this line
     }
 
     public function beforeSave($event, $entity, $options)
