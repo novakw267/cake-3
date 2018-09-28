@@ -5,6 +5,26 @@ namespace App\Controller;
 
 class ArticlesController extends AppController
 {
+    public function isAuthorized($user)
+    {
+        $action = $this->request->getParam('action');
+        // The add and tags actions are always allowed to logged in users.
+        if (in_array($action, ['add', 'tags'])) {
+            return true;
+        }
+
+        // All other actions require a slug.
+        $slug = $this->request->getParam('pass.0');
+        if (!$slug) {
+            return false;
+        }
+
+        // Check that the article belongs to the current user.
+        $article = $this->Articles->findBySlug($slug)->first();
+
+        return $article->user_id === $user['id'];
+    }
+
     public function index()
     {
         $this->loadComponent('Paginator');
@@ -17,70 +37,47 @@ class ArticlesController extends AppController
     // relevent article or throw message saying not found.
     // slug in this case represents the users search paramiters
     public function view($slug = null)
-{
-    $article = $this->Articles->findBySlug($slug)->firstOrFail();
-    $this->set(compact('article'));
-}    public function add()
     {
-        //The add action
-        // The goal is to make a request that includes and object
-        // This contains information about the request
-        // By usign the is('method') it is able to check that it is a post
-        // request being made.
+        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        $this->set(compact('article'));
+    }
+    public function add()
+    {
         $article = $this->Articles->newEntity();
         if ($this->request->is('post')) {
-            // The data for our post is in getData()
-            // you can use pr() or debug() to print the data if you want
             $article = $this->Articles->patchEntity($article, $this->request->getData());
 
-            // Hardcoding the user_id is temporary, and will be removed later
-            // when we build authentication out.
-            $article->user_id = 1;
+            // Changed: Set the user_id from the session.
+            $article->user_id = $this->Auth->user('id');
 
-            // In order to save the data it get it gets compiled into the article
-            // entity and passed to the database in the articles table.
             if ($this->Articles->save($article)) {
-                // If the data is successfully saved it will flash a message
-                // saying it has been saved, and redirect you to the next page.
-                // this->flash is the function for displaying flash messages
                 $this->Flash->success(__('Your article has been saved.'));
                 return $this->redirect(['action' => 'index']);
             }
-            // same thing here except this is for if you are not successfull
             $this->Flash->error(__('Unable to add your article.'));
         }
-        // Get a list of tags.
-            $tags = $this->Articles->Tags->find('list');
-
-            // Set tags to the view context
-            $this->set('tags', $tags);
-
-            $this->set('article', $article);
         $this->set('article', $article);
     }
-        public function edit($slug)
-        {
-            // If a slug parameter is not used, an error will be thrown.
-            // This is to be sure that the user is editing an actual entity
-            //Next it then determines
-            $article = $this->Articles->findBySlug($slug)->firstOrFail();
-            if ($this->request->is(['post', 'put'])) {
-                $this->Articles->patchEntity($article, $this->request->getData());
-                if ($this->Articles->save($article)) {
+    public function edit($slug)
+    {
+        $article = $this->Articles
+->findBySlug($slug)
+->contain('Tags') // load associated Tags
+->firstOrFail();
+
+        if ($this->request->is(['post', 'put'])) {
+            $this->Articles->patchEntity($article, $this->request->getData(), [
+    // Added: Disable modification of user_id.
+    'accessibleFields' => ['user_id' => false]
+]);
+            if ($this->Articles->save($article)) {
                 $this->Flash->success(__('Your article has been updated.'));
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('Unable to update your article.'));
         }
-
-        // Get a list of tags.
-        $tags = $this->Articles->Tags->find('list');
-
-        // Set tags to the view context
-        $this->set('tags', $tags);
-
         $this->set('article', $article);
-}
+    }
     public function delete($slug)
     {
         $this->request->allowMethod(['post', 'delete']);
@@ -92,21 +89,22 @@ class ArticlesController extends AppController
         }
     }
     public function tags()
-{
-    // The 'pass' key is provided by CakePHP and contains all
-    // the passed URL path segments in the request.
-    $tags = $this->request->getParam('pass');
+    {
+        // The 'pass' key is provided by CakePHP and contains all
+        // the passed URL path segments in the request.
+        $tags = $this->request->getParam('pass');
 
-    // Use the ArticlesTable to find tagged articles.
-    $articles = $this->Articles->find('tagged', [
+        // Use the ArticlesTable to find tagged articles.
+        $articles = $this->Articles->find('tagged', [
         'tags' => $tags
     ]);
 
-    // Pass variables into the view template context.
-    $this->set([
+        // Pass variables into the view template context.
+        $this->set([
         'articles' => $articles,
         'tags' => $tags
     ]);
-}
 
+        $this->Auth->allow(['tags']);
+    }
 }
