@@ -1,5 +1,5 @@
 # Cake Content Management System Tutorial
-I completed the base tutorial for CakePHP, along with some small additional features. This is step one in my journey to learn the framework. It was also a way for me to practice my git best practices. I plan to add more to this or run through the tutorial to build another application in the future.
+Completed the base tutorial for CakePHP, along with some small additional features. This is step one to learn the framework. It is also a good way to practice github best practices. This a great starting point for a future project.
 
 # Getting Started
 In order to complete this tutorial you will need CakePHP, MySQL/MariaDB, Composer package manager, and a good text editor.
