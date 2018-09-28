@@ -12,6 +12,7 @@ Things you need to have a basic grasp of ahead of time,
 ```
 Command line/terminal
 ```
+```
 MySQL statements,
 ```
 PHP on a basic level,
