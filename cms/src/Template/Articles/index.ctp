@@ -2,6 +2,8 @@
 
 <h1>Articles</h1>
 <?= $this->Html->link('Add Article', ['action' => 'add']) ?>
+<li><?= $this->Html->link(__('User List'), ['controller' => 'Users', 'action' => 'index']) ?></li>
+
 <table>
     <tr>
         <th>Title</th>
