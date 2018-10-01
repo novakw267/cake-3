@@ -29,6 +29,11 @@ use Cake\Event\Event;
  */
 class AppController extends Controller
 {
+    public function isAuthorized($user)
+    {
+        // By default deny access.
+        return false;
+    }
 
     /**
      * Initialization hook method.
