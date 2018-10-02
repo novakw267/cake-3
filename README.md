@@ -1,4 +1,4 @@
-# cake-3
+# Cake-cms
 # Cake Content Management System Tutorial
 Completed the base tutorial for CakePHP, along with some small additional features. This is step one to learn the framework. It is also a good way to practice github best practices. This a great starting point for a future project.
 
