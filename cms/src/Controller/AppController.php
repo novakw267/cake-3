@@ -17,8 +17,6 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Event\Event;
 
-
-
 /**
  * Application Controller
  *
@@ -72,9 +70,9 @@ class AppController extends Controller
     'unauthorizedRedirect' => $this->referer()
 ]);
 
-// Allow the display action so our PagesController
-// continues to work. Also enable the read only actions.
-$this->Auth->allow(['display', 'view', 'index']);
+        // Allow the display action so our PagesController
+        // continues to work. Also enable the read only actions.
+        $this->Auth->allow(['display', 'view', 'index']);
 
         /*
          * Enable the following component for recommended CakePHP security settings.
@@ -82,5 +80,4 @@ $this->Auth->allow(['display', 'view', 'index']);
          */
         //$this->loadComponent('Security');
     }
-
 }

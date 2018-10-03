@@ -61,15 +61,15 @@ class ArticlesController extends AppController
     public function edit($slug)
     {
         $article = $this->Articles
-->findBySlug($slug)
-->contain('Tags') // load associated Tags
-->firstOrFail();
+            ->findBySlug($slug)
+            ->contain('Tags') // load associated Tags
+            ->firstOrFail();
 
         if ($this->request->is(['post', 'put'])) {
             $this->Articles->patchEntity($article, $this->request->getData(), [
     // Added: Disable modification of user_id.
     'accessibleFields' => ['user_id' => false]
-]);
+    ]);
             if ($this->Articles->save($article)) {
                 $this->Flash->success(__('Your article has been updated.'));
                 return $this->redirect(['action' => 'index']);
